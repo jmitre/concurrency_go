@@ -4,17 +4,49 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"sync"
+	"time"
 )
 
-var SIZE = 20
+var SIZE = 45
 
 type Formatter struct {
-	PanelOne []string
-	PanelTwo []string
+	PanelOne   []string
+	PanelTwo   []string
+	PanelThree []string
+	Step       int
+	Mutex      *sync.Mutex
 }
 
 func CreateFormatter() *Formatter {
-	return &Formatter{make([]string, SIZE), make([]string, SIZE)}
+	return &Formatter{make([]string, SIZE), make([]string, SIZE), make([]string, SIZE), 0, &sync.Mutex{}}
+}
+
+func (f *Formatter) PrintMainThread(s string) {
+	f.Mutex.Lock()
+	f.AddToPanelOne(s)
+	f.AddToPanelTwo(" ")
+	f.AddToPanelThree(" ")
+	f.Print()
+	f.Mutex.Unlock()
+}
+
+func (f *Formatter) PrintThreadOne(s string) {
+	f.Mutex.Lock()
+	f.AddToPanelTwo(s)
+	f.AddToPanelOne(" ")
+	f.AddToPanelThree(" ")
+	f.Print()
+	f.Mutex.Unlock()
+}
+
+func (f *Formatter) PrintThreadTwo(s string) {
+	f.Mutex.Lock()
+	f.AddToPanelThree(s)
+	f.AddToPanelOne(" ")
+	f.AddToPanelTwo(" ")
+	f.Print()
+	f.Mutex.Unlock()
 }
 
 func (f *Formatter) AddToPanelOne(s string) {
@@ -35,12 +67,25 @@ func (f *Formatter) AddToPanelTwo(s string) {
 	}
 }
 
-func (f *Formatter) Print() {
-	clear()
+func (f *Formatter) AddToPanelThree(s string) {
 	for i := 0; i < SIZE; i++ {
-		fmt.Printf("%-15s | %-15s\n", f.PanelOne[i], f.PanelTwo[i])
+		if f.PanelThree[i] == "" {
+			f.PanelThree[i] = s
+			return
+		}
 	}
-	fmt.Println(f)
+}
+
+func (f *Formatter) Print() {
+	time.Sleep(4 * time.Second)
+	clear()
+	f.Step++
+	fmt.Println("Step", f.Step)
+	fmt.Printf("%-35s | %-35s | %-35s\n", "Main", "Thread 1", "Thread 2")
+	fmt.Printf("%-35s|%-35s|%-35s\n", delimiter, delimiter, delimiter)
+	for i := 0; i < SIZE; i++ {
+		fmt.Printf("%-35s | %-35s | %-35s\n", f.PanelOne[i], f.PanelTwo[i], f.PanelThree[i])
+	}
 }
 
 func clear() {
@@ -48,3 +93,5 @@ func clear() {
 	cmd.Stdout = os.Stdout
 	cmd.Run()
 }
+
+var delimiter = "####################################"
