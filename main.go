@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/jmitre/concurrency_go/Formatter"
 	"time"
+
+	"github.com/jmitre/concurrency_go/Formatter"
 )
 
 var threadPrinter *formatter.Formatter
@@ -28,10 +29,10 @@ func main() {
 func printHello(hasPrintedHelloChan chan bool, hasPrintedWolrdChan chan bool) {
 	threadPrinter.PrintThreadOne("for i := 0; i < 10; i++ {")
 	for i := 0; i < 10; i++ {
-		threadPrinter.PrintThreadOne("<-hasPrintedWolrdChan")
+		threadPrinter.PrintThreadOne("   <-hasPrintedWolrdChan")
 		<-hasPrintedWolrdChan
-		threadPrinter.PrintThreadOne("Hello")
-		threadPrinter.PrintThreadOne("hasPrintedHelloChan <- true")
+		threadPrinter.PrintThreadOne("   Hello")
+		threadPrinter.PrintThreadOne("   hasPrintedHelloChan <- true")
 		hasPrintedHelloChan <- true
 	}
 }
@@ -39,10 +40,10 @@ func printHello(hasPrintedHelloChan chan bool, hasPrintedWolrdChan chan bool) {
 func printWorld(hasPrintedHelloChan chan bool, hasPrintedWolrdChan chan bool) {
 	threadPrinter.PrintThreadTwo("for i := 0; i < 10; i++ {")
 	for i := 0; i < 10; i++ {
-		threadPrinter.PrintThreadTwo("<-hasPrintedHelloChan")
+		threadPrinter.PrintThreadTwo("   <-hasPrintedHelloChan")
 		<-hasPrintedHelloChan
-		threadPrinter.PrintThreadTwo("World")
-		threadPrinter.PrintThreadTwo("hasPrintedWolrdChan <- true")
+		threadPrinter.PrintThreadTwo("   World")
+		threadPrinter.PrintThreadTwo("   hasPrintedWolrdChan <- true")
 		hasPrintedWolrdChan <- true
 	}
 }

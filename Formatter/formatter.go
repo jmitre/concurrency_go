@@ -81,10 +81,10 @@ func (f *Formatter) Print() {
 	clear()
 	f.Step++
 	fmt.Println("Step", f.Step)
-	fmt.Printf("%-35s | %-35s | %-35s\n", "Main", "Thread 1", "Thread 2")
-	fmt.Printf("%-35s|%-35s|%-35s\n", delimiter, delimiter, delimiter)
+	fmt.Printf("%-40s|%-40s|%-40s\n", "Main", "Thread 1", "Thread 2")
+	fmt.Printf("%-40s|%-40s|%-40s\n", delimiter, delimiter, delimiter)
 	for i := 0; i < SIZE; i++ {
-		fmt.Printf("%-35s | %-35s | %-35s\n", f.PanelOne[i], f.PanelTwo[i], f.PanelThree[i])
+		fmt.Printf("%-40s|%-40s|%-40s\n", f.PanelOne[i], f.PanelTwo[i], f.PanelThree[i])
 	}
 }
 
@@ -94,4 +94,4 @@ func clear() {
 	cmd.Run()
 }
 
-var delimiter = "####################################"
+var delimiter = "########################################"
