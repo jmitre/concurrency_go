@@ -11,7 +11,9 @@ var threadPrinter *formatter.Formatter
 func main() {
 	threadPrinter = formatter.CreateFormatter()
 
+	threadPrinter.PrintMainThread("hasPrintedHelloChan := make(chan bool)")
 	hasPrintedHelloChan := make(chan bool)
+	threadPrinter.PrintMainThread("hasPrintedWorldChan := make(chan bool)")
 	hasPrintedWorldChan := make(chan bool)
 
 	threadPrinter.PrintMainThread("go printHello()")

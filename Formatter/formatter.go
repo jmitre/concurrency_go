@@ -77,7 +77,7 @@ func (f *Formatter) AddToPanelThree(s string) {
 }
 
 func (f *Formatter) Print() {
-	time.Sleep(4 * time.Second)
+	time.Sleep(2 * time.Second)
 	clear()
 	f.Step++
 	fmt.Println("Step", f.Step)
